@@ -1,67 +1,32 @@
 const router = require('express').Router()
-const jwt = require('jsonwebtoken')
-const Blog = require('../models/blog')
-const User = require('../models/user')
 
-router.get('/', async (request, response) => {
-  const blogs = await Blog
-    .find({}).populate('user', { username: 1, name: 1 })
+const { Blog } = require('../models')
 
-  response.json(blogs)
+router.get('/', async (req, res) => {
+  const blogs = await Blog.findAll()
+  res.json(blogs)
 })
 
-router.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+router.post('/', async (req, res) => {
+  try {
+    const blog = await Blog.create(req.body)
+    return res.json(blog)
+  } catch(error) {
+    return res.status(400).json({ error })
   }
-
-  const user = await User.findById(decodedToken.id)
-  const blog = await Blog.findById(request.params.id)
-  if (blog.user.toString() !== user.id.toString()) {
-    return response.status(401).json({ error: 'only the creator can delete blogs' })
-  }
-
-  await blog.remove()
-  user.blogs = user.blogs.filter(b => b.id.toString() !== request.params.id.toString())
-  await user.save()
-  response.status(204).end()
 })
 
-router.put('/:id', async (request, response) => {
-  const blog = request.body
-
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-  response.json(updatedBlog.toJSON())
-})
-
-router.post('/', async (request, response) => {
-  const blog = new Blog(request.body)
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  if (!request.token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+router.delete('/:id', async (req, res) => {
+  console.log(req.params.id)
+  var id = req.params.id
+  const blog = await Blog.findByPk(id)
+  console.log(blog)
+  
+  if(blog === null ) {
+    console.log('Blog not found')
+  } else {
+    await blog.destroy()
   }
-
-  const user = await User.findById(decodedToken.id)
-
-  if (!blog.url || !blog.title) {
-    return response.status(400).send({ error: 'title or url missing ' })
-  }
-
-  if (!blog.likes) {
-    blog.likes = 0
-  }
-
-  blog.user = user
-  const savedBlog = await blog.save()
-
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
-
-  response.status(201).json(savedBlog)
 })
 
 module.exports = router
