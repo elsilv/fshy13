@@ -1,35 +1,40 @@
 const bcrypt = require('bcrypt')
 const router = require('express').Router()
-const User = require('../models/user')
+const { User } = require('../models')
 
 router.get('/', async (request, response) => {
-  const users = await User
-    .find({})
-    .populate('blogs', { title: 1, url: 1,  likes: 1, author: 1 })
-
-  response.json(users.map(u => u.toJSON()))
+  const users = await User.findAll()
+  response.json(users)
 })
 
 router.post('/', async (request, response) => {
-  const { password, name, username } = request.body
-
-  if ( !password || password.length<3 ) {
-    return response.status(400).send({
-      error: 'password must min length 3'
-    })
+  try {
+    const user = await User.create(request.body)
+    response.json(user)
+  } catch(error) {
+    return res.status(400).json({ error })
   }
+})
 
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
+router.get('/:id', async (req, res) => {
+  const user = await User.findByPk(req.params.id)
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404).end()
+  }
+})
 
-  const user = new User({
-    username, name,
-    passwordHash,
-  })
-
-  const savedUser = await user.save()
-
-  response.json(savedUser)
+router.put('/:username', async (req, res) => {
+  const user = await User.findOne({ where: { username: req.params.username } })
+  if (user) {
+    user.username = req.body.username
+    console.log(req.body.username)
+    await user.save()
+      res.json(user)
+  } else {
+    res.status(404).send({ error: 'not found user with given username' })
+  }
 })
 
 module.exports = router
