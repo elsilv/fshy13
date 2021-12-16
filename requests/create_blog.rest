@@ -1,1 +1,17 @@
-GET http://localhost:3001/api/blogs
+PUT http://localhost:3001/api/blogs/6
+Content-Type: application/json
+
+{
+    "likes": 2
+}
+
+###
+
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "author": "Maukumau",
+    "url": "www.kissamau.fi",
+    "title": "Maaaauu maau"
+}
