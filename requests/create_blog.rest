@@ -9,11 +9,12 @@ Content-Type: application/json
 
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtpc3NhQG1hdS5jb20iLCJpZCI6NSwiaWF0IjoxNjM5NzQwMjgxfQ.eaLv-q9Ol5m5m9ylTowuf2WOQIRc9kA0chfY2qqZmdo
 
 {
-    "author": "Maukumau",
-    "url": "www.kissamau.fi",
-    "title": "Maaaauu maau"
+    "author": "miumiumiu",
+    "url": "www.kissakissa.fi",
+    "title": "Miumiumiumiu"
 }
 
 ###
@@ -22,8 +23,8 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-    "name": "Maukumaumu",
-    "username": "kissu"
+    "name": "Mirri mau",
+    "username": "pspsps@psps.com"
 }
 
 ###
@@ -32,7 +33,7 @@ POST http://localhost:3001/api/login
 Content-Type: application/json
 
 {
-    "username": "Miumiu",
+    "username": "kissa@mau.com",
     "password": "salainen"
 }
 
@@ -44,3 +45,7 @@ Content-Type: application/json
 {
     "username": "Maukumau"
 }
+
+###
+
+DELETE  http://localhost:3001/api/users/4
