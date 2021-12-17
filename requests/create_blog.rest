@@ -12,9 +12,9 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imtpc3NhQG1hdS5jb20iLCJpZCI6NSwiaWF0IjoxNjM5NzQwMjgxfQ.eaLv-q9Ol5m5m9ylTowuf2WOQIRc9kA0chfY2qqZmdo
 
 {
-    "author": "miumiumiu",
-    "url": "www.kissakissa.fi",
-    "title": "Miumiumiumiu"
+    "author": "Maukumau",
+    "url": "www.kissamau.fi",
+    "title": "Testikirja 1"
 }
 
 ###
@@ -49,3 +49,6 @@ Content-Type: application/json
 ###
 
 DELETE  http://localhost:3001/api/users/4
+
+###
+DELETE  http://localhost:3001/api/blogs/5

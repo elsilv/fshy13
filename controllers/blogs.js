@@ -41,15 +41,14 @@ router.post('/', tokenExtractor, async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
-  console.log(req.params.id)
+router.delete('/:id', tokenExtractor, async (req, res) => {
   var id = req.params.id
   const blog = await Blog.findByPk(id)
-  
-  if(blog !== null ) {
+
+  if(blog.userId === req.decodedToken.id) {
     await blog.destroy()
   } else {
-    res.status(404).end()
+    res.status(401).send({ error: 'Wrong token' })
   }
 })
 
